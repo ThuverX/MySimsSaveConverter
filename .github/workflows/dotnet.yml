@@ -28,9 +28,6 @@ jobs:
     - name: Publish executable
       run: dotnet publish -c Release -r win-x64 --self-contained false -o publish/
 
-    - name: Rename output executable
-      run: mv publish/SaveConverter.exe publish/SaveConverter.exe
-
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
