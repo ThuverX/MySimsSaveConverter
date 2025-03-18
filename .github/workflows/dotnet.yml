@@ -1,0 +1,38 @@
+name: .NET Build and Upload
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup .NET 9
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 9.0.x  # Ensure it installs .NET 9
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Build
+      run: dotnet build --no-restore --configuration Release
+
+    - name: Publish executable
+      run: dotnet publish -c Release -r win-x64 --self-contained false -o publish/
+
+    - name: Rename output executable
+      run: mv publish/SaveConverter.exe publish/SaveConverter.exe
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: SaveConverter
+        path: publish/SaveConverter.exe
